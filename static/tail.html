@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<head>
+    <title>tail</title>
+    <meta charset="utf-8">
+    <script src="/static/js/tail.js"></script>
+    <script>
+        initiate_pull("ws://localhost:8888/ws?f={{filename}}&l={{nlines}}");
+    </script>
+</head>
+<body>
+<pre id="logspace">
+
+</pre>
+
+</body>
