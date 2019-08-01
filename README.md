@@ -10,8 +10,8 @@
 
 ####Configuration:
 Before running the docker container, application settings can be changed by chnaging the environment variable value passed. Below are the deatils of these variables:
-1. LOGDIR : directory of logfile
-2. LOGBUFFER : application will wait these many seconds let the new accumulate before sending it forward
-3. PINGINTERVAL : websocket ping interval in second
-4. PINGTIMEOUT : websocket timeout duration in second
-5. PORT : webserver port
+1. `LOGDIR` : directory of logfile
+2. `LOGBUFFER` : application will wait these many seconds let the new accumulate before sending it forward
+3. `PINGINTERVAL` : websocket ping interval in second
+4. `PINGTIMEOUT` : websocket timeout duration in second
+5. `PORT` : webserver port
