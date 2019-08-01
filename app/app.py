@@ -10,11 +10,11 @@ import os
 import uuid
 from helpers import seek2
 
-LOGDIR = os.environ['LOGDIR']  # directory of logfile
-LOGBUFFER = int(os.environ['LOGBUFFER'])  # application will wait these many seconds let the new accumulate before sending it forward
-PINGINTERVAL = int(os.environ['PINGINTERVAL'])  # websocket ping interval in second
-PINGTIMEOUT = int(os.environ['PINGTIMEOUT'])  # websocket timeout duration in second
-PORT = int(os.environ['PORT'])  # webserver port
+LOGDIR = os.environ.get('LOGDIR', '/var/log')  # directory of logfile
+LOGBUFFER = int(os.environ.get('LOGBUFFER', 5))  # application will wait these many seconds let the new accumulate before sending it forward
+PINGINTERVAL = int(os.environ.get('PINGINTERVAL', 5))  # websocket ping interval in second
+PINGTIMEOUT = int(os.environ.get('PINGTIMEOUT', 10))  # websocket timeout duration in second
+PORT = int(os.environ.get('PORT', 8888))  # webserver port
 
 
 def read_and_send_file(request, filename, nlines):
