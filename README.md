@@ -2,11 +2,11 @@
 
 
 ####How to use:
-1. Clone this repo using
-2. Run `cd logstream` to switch to directory
-3. Build the docker image using `docker build -t logstream .`
+1. Clone this repo.
+2. Run `cd logstream` to switch to directory.
+3. Build the docker image using `docker build -t logstream .`.
 4. Run `bash deploy.sh` to run the container.
-5. vist `http://localhost:8888/tail?f=<the_filename>&l=<num_of_lines>`
+5. vist `http://localhost:8888/tail?f=<the_filename>&l=<num_of_lines>`.
 
 ####Configuration:
 Before running the docker container, application settings can be changed by chnaging the environment variable value passed. Below are the deatils of these variables:
