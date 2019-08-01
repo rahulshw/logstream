@@ -7,5 +7,9 @@ function initiate_pull(uri){
     ws.onopen = function(event) {
         ws.send('start_sending')
     }
+    ws.onclose = function(event) {
+        window.alert(event.reason)
+        console.log(event)
+    }
 };
 
