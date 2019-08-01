@@ -1,6 +1,7 @@
 import tornado.httpserver
 import tornado.websocket
 import tornado.ioloop
+from tornado.ioloop import IOLoop
 import tornado.web
 import tornado.gen
 import tornado.log
@@ -9,11 +10,11 @@ import os
 import uuid
 from helpers import seek2
 
-LOGDIR = '/var/log'  # directory of logfile
-LOGBUFFER = 10  # application will wait these many seconds let the new accumulate before sending it forward
-PINGINTERVAL = 5  # websocket ping interval in second
-PINGTIMEOUT = 3  # websocket timeout duration in second
-PORT = 8888  # webserver port
+LOGDIR = os.environ['LOGDIR']  # directory of logfile
+LOGBUFFER = int(os.environ['LOGBUFFER'])  # application will wait these many seconds let the new accumulate before sending it forward
+PINGINTERVAL = int(os.environ['PINGINTERVAL'])  # websocket ping interval in second
+PINGTIMEOUT = int(os.environ['PINGTIMEOUT'])  # websocket timeout duration in second
+PORT = int(os.environ['PORT'])  # webserver port
 
 
 def read_and_send_file(request, filename, nlines):
@@ -46,17 +47,26 @@ def read_and_send_file(request, filename, nlines):
 
 
 class WSHandler(tornado.websocket.WebSocketHandler):
+    """ Handler for websocket connection """
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.logger = tornado.log.app_log
+        self.logger.setLevel('INFO')
         self.id = uuid.uuid4()
+        self.nlines = 0
+        self.filename = ''
 
     def open(self):
-        nlines = int(self.get_query_argument('l'))
-        filename = self.get_query_argument('f')
+        self.nlines = int(self.get_query_argument('l'))
+        self.filename = self.get_query_argument('f')
         self.logger.info('new connection: %s, from: %s' % (self.id, self.request.remote_ip))
-        read_and_send_file(self, filename, nlines)
+        #read_and_send_file(self, self.filename, self.nlines)
+
+    def on_message(self, message):
+        print('message: %s'%message)
+        if message == 'start_sending':
+            read_and_send_file(self, self.filename, self.nlines)
 
     def on_close(self):
         self.logger.info('connection:%s closed' % self.id)
@@ -66,8 +76,10 @@ class WSHandler(tornado.websocket.WebSocketHandler):
 
 
 class TailHandler(tornado.web.RequestHandler):
+    """ Handler for HTTP connection """
 
     def get(self):
+        """ Serves base HTML page with javascript code for websocket """
         nlines = int(self.get_query_argument('l'))
         filename = self.get_query_argument('f')
         self.render('tail.html', filename=filename, nlines=nlines)
@@ -87,6 +99,7 @@ application = tornado.web.Application(
 if __name__ == "__main__":
     http_server = tornado.httpserver.HTTPServer(application)
     http_server.listen(PORT)
-    myIP = socket.gethostbyname(socket.gethostname())
+    http_server.start(num_processes=1, max_restarts=1)
     print('server started')
-    tornado.ioloop.IOLoop.instance().start()
+    IOLoop.current().start()
+
