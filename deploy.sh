@@ -4,7 +4,6 @@ image=logstream:latest
 
 docker run -d \
 -p 8888:8888 \
--v ~/git/logstream:/git \
 -v /var/log/:/host_logs:ro \
 -e LOGDIR=/host_logs \
 -e LOGBUFFER=5 \
